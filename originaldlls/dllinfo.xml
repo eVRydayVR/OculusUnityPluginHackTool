@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dllinfo>
+  <dll version="0.4.0" filename="0.4.0/OculusPlugin.dll">
+    <patch name="CA0" offset="306776" length="4"/>
+    <patch name="CA1" offset="306772" length="4"/>
+    <patch name="CA2" offset="306364" length="4"/>
+    <patch name="CA3" offset="306848" length="4"/>
+  </dll>
+  <dll version="0.4.1" filename="0.4.1/OculusPlugin.dll">
+    <patch name="CA0" offset="304216" length="4"/>
+    <patch name="CA1" offset="304212" length="4"/>
+    <patch name="CA2" offset="303804" length="4"/>
+    <patch name="CA3" offset="304288" length="4"/>
+  </dll>
+  <dll version="0.4.2" filename="0.4.2/OculusPlugin.dll">
+    <patch name="CA0" offset="307912" length="4"/>
+    <patch name="CA1" offset="307900" length="4"/>
+    <patch name="CA2" offset="307492" length="4"/>
+    <patch name="CA3" offset="307992" length="4"/>
+  </dll>
+</dllinfo>
