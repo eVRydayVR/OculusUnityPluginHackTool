@@ -16,8 +16,31 @@ namespace OculusUnityPluginHackTool {
         string filename;
         List<PluginDll> dlls = new List<PluginDll>();
 
+        int minCARow = 0;
+        TextBox[,] textBoxCA = new TextBox[2,4];
+        TextBox[] textBoxDistortion = new TextBox[11];
+
         public FormMain() {
             InitializeComponent();
+            textBoxCA[0, 0] = textBoxCA0_0;
+            textBoxCA[0, 1] = textBoxCA0_1;
+            textBoxCA[0, 2] = textBoxCA0_2;
+            textBoxCA[0, 3] = textBoxCA0_3;
+            textBoxCA[1, 0] = textBoxCA1_0;
+            textBoxCA[1, 1] = textBoxCA1_1;
+            textBoxCA[1, 2] = textBoxCA1_2;
+            textBoxCA[1, 3] = textBoxCA1_3;
+            textBoxDistortion[0] = textBoxDistortion0;
+            textBoxDistortion[1] = textBoxDistortion1;
+            textBoxDistortion[2] = textBoxDistortion2;
+            textBoxDistortion[3] = textBoxDistortion3;
+            textBoxDistortion[4] = textBoxDistortion4;
+            textBoxDistortion[5] = textBoxDistortion5;
+            textBoxDistortion[6] = textBoxDistortion6;
+            textBoxDistortion[7] = textBoxDistortion7;
+            textBoxDistortion[8] = textBoxDistortion8;
+            textBoxDistortion[9] = textBoxDistortion9;
+            textBoxDistortion[10] = textBoxDistortion10;
         }
 
         private void FormMain_Load(object sender, EventArgs e) {
@@ -49,21 +72,33 @@ namespace OculusUnityPluginHackTool {
                     if (matchingDll != null) {
                         this.dll = matchingDll;
                         this.filename = openFileDialog.FileName;
+                        textBoxVersion.Text = this.dll.Version;
+
+                        // Set number of CA rows based on version
+                        minCARow = 1;
+                        if (this.dll.Version == "0.4.2") {
+                            minCARow = 0;
+                        }
+                        for (int i = 0; i < minCARow; i++) {
+                            for (int j = 0; j < textBoxCA.GetLength(1); j++) {
+                                textBoxCA[i, j].Enabled = false;
+                            }
+                        }
+
+                        LoadFromDll(this.filename);
+                        UpdateDirty(false);
                     } else {
                         MessageBox.Show(this, "Could not identify version of OculusPlugin.dll file. May be modified from original or may be unsupported version.", "Unidentified Plug-in Version", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         this.Close();
-                        return;
                     }
                 }
                 catch (Exception ex) {
                     MessageBox.Show(this, "Error: Encountered unexpected error: " + ex.Message + "\n\nPlease report with screenshot to: eVRydayVR@gmail.com", "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
-                    return;
                 }
+            } else {
+                this.Close();
             }
-            textBoxVersion.Text = this.dll.Version;
-            LoadFromDll(this.filename);
-            UpdateDirty(false);
         }
 
         private void LoadDllInfo() {
@@ -89,13 +124,40 @@ namespace OculusUnityPluginHackTool {
             return BitConverter.ToSingle(bytes, dll.GetOffset(name)).ToString("G");
         }
 
-        private void LoadFromDll(string filename) {
+        private void LoadFromDllCA(string filename) {
             using (var stream = new BinaryReader(File.OpenRead(filename))) {
                 var bytes = stream.ReadBytes((int)new FileInfo(filename).Length);
-                textBoxCA0.Text = SingleFromOffset(bytes, "CA0");
-                textBoxCA1.Text = SingleFromOffset(bytes, "CA1");
-                textBoxCA2.Text = SingleFromOffset(bytes, "CA2");
-                textBoxCA3.Text = SingleFromOffset(bytes, "CA3");
+                for (int i = minCARow; i < textBoxCA.GetLength(0); i++) {
+                    for (int j = 0; j < textBoxCA.GetLength(1); j++) {
+                        textBoxCA[i, j].Text = SingleFromOffset(bytes, "CA" + i + "_" + j);
+                    }
+                }
+            }
+        }
+
+        private void LoadFromDllDistortion(string filename) {
+            using (var stream = new BinaryReader(File.OpenRead(filename))) {
+                var bytes = stream.ReadBytes((int)new FileInfo(filename).Length);
+                for (int i = 0; i < textBoxDistortion.Length; i++) {
+                    textBoxDistortion[i].Text = SingleFromOffset(bytes, "Distortion" + i);
+                }
+            }
+        }
+
+        private void LoadFromDll(string filename) {
+            LoadFromDllCA(filename);
+            LoadFromDllDistortion(filename);
+            using (var stream = new BinaryReader(File.OpenRead(filename))) {
+                var bytes = stream.ReadBytes((int)new FileInfo(filename).Length);
+                textBoxFadeout.Text = (1.0 / BitConverter.ToDouble(bytes, dll.GetOffset("FadeoutInverse"))).ToString("G");
+                byte opcode = bytes[dll.GetOffset("FadeoutJump")];
+                if (opcode == opcodeJnz) {
+                    checkBoxEnableFuzzyBoundary.Checked = true;
+                } else if (opcode == opcodeJmp) {
+                    checkBoxEnableFuzzyBoundary.Checked = false;
+                } else {
+                    throw new Exception("Unexpected opcode for fuzzy boundary jump");
+                }
             }
         }
 
@@ -103,19 +165,7 @@ namespace OculusUnityPluginHackTool {
             buttonSave.Enabled = value;
         }
 
-        private void textBoxCA0_TextChanged(object sender, EventArgs e) {
-            UpdateDirty(true);
-        }
-
-        private void textBoxCA1_TextChanged(object sender, EventArgs e) {
-            UpdateDirty(true);
-        }
-
-        private void textBoxCA2_TextChanged(object sender, EventArgs e) {
-            UpdateDirty(true);
-        }
-
-        private void textBoxCA3_TextChanged(object sender, EventArgs e) {
+        private void setDirtyTrueEvent(object sender, EventArgs e) {
             UpdateDirty(true);
         }
 
@@ -125,15 +175,39 @@ namespace OculusUnityPluginHackTool {
         }
         private void WriteSingle(BinaryWriter writer, string name, float value) {
             writer.Seek(dll.GetOffset(name), SeekOrigin.Begin);
-            writer.Write(BitConverter.GetBytes(value));
+            writer.Write(value);
         }
+
+        private void WriteDouble(BinaryWriter writer, string name, double value) {
+            writer.Seek(dll.GetOffset(name), SeekOrigin.Begin);
+            writer.Write(value);
+        }
+
+        private void WriteByte(BinaryWriter writer, string name, byte value) {
+            writer.Seek(dll.GetOffset(name), SeekOrigin.Begin);
+            writer.Write(value);
+        }
+
+        const byte opcodeJz = 0x74;
+        const byte opcodeJnz = 0x75;
+        const byte opcodeJp = 0x7A;
+        const byte opcodeJnp = 0x7B;
+        const byte opcodeJmp = 0xEB;
 
         private void SaveToDll(string filename) {
             using (var stream = new BinaryWriter(File.OpenWrite(filename))) {
-                WriteSingle(stream, "CA0", float.Parse(textBoxCA0.Text));
-                WriteSingle(stream, "CA1", float.Parse(textBoxCA1.Text));
-                WriteSingle(stream, "CA2", float.Parse(textBoxCA2.Text));
-                WriteSingle(stream, "CA3", float.Parse(textBoxCA3.Text));
+                for (int i = minCARow; i < textBoxCA.GetLength(0); i++) {
+                    for (int j = 0; j < textBoxCA.GetLength(1); j++) {
+                        WriteSingle(stream, "CA" + i + "_" + j, float.Parse(textBoxCA[i, j].Text));
+                    }
+                }
+                for (int i = 0; i < textBoxDistortion.Length; i++) {
+                    WriteSingle(stream, "Distortion" + i, float.Parse(textBoxDistortion[i].Text));
+                }
+                double fadeout = double.Parse(textBoxFadeout.Text);
+                WriteDouble(stream, "FadeoutInverse", 1.0 / fadeout);
+                WriteDouble(stream, "FadeoutInverseDouble", 2.0 / fadeout);
+                WriteByte(stream, "FadeoutJump", checkBoxEnableFuzzyBoundary.Checked ? opcodeJnz : opcodeJmp);
             }
             UpdateDirty(false);
         }
@@ -143,6 +217,28 @@ namespace OculusUnityPluginHackTool {
                 LoadFromDll(dll.Filename);
                 UpdateDirty(true);
             }
+        }
+
+        private void buttonDisableCA_Click(object sender, EventArgs e) {
+            for (int i = minCARow; i < textBoxCA.GetLength(0); i++) {
+                for (int j = 0; j < textBoxCA.GetLength(1); j++) {
+                    textBoxCA[i, j].Text = "0";
+                }
+            }
+        }
+
+        private void buttonDisableDistortion_Click(object sender, EventArgs e) {
+            for (int i = 0; i < textBoxDistortion.Length; i++) {
+                textBoxDistortion[i].Text = "1";
+            }
+        }
+
+        private void buttonResetCA_Click(object sender, EventArgs e) {
+            LoadFromDllCA(dll.Filename);
+        }
+
+        private void buttonResetDistortion_Click(object sender, EventArgs e) {
+            LoadFromDllDistortion(dll.Filename);
         }
     }
 }
