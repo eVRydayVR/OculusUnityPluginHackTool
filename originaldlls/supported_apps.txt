@@ -1,0 +1,42 @@
+==UNSUPPORTED==
+BLASTBUSTER2Test
+DGL_win64
+KokiriForest
+MyNeighbourTotoro-VR-V1.5-DK2
+MyNeighbourTotoro_SDK0.4.2-DK2-V1.7.1
+RedofPawsBigCrazyStupidAdventureAndAmericanPie-DEMO-V1.3_DK2
+RedofPawsBigCrazyStupidAdventureAndAmericanPie-DEMO-SDK0.4.2-V1.6.1
+SpiritedAwayBoilerRoom-1_4-DK2
+SpiritedAwayBoilerRoom_SDK0.4.2-DK2-V1.2
+Whirligig 64-bit
+4thFloorStudioVR(SDKv0.4.1)
+TECHNOLUST_4.1BETA_WIN64
+
+==SUPPORTED==
+AdventureVR (0.4.0)
+DigitalRain (0.4.0)
+Infinity VR Drive-In v1.6 (0.4.0)
+Island Scene (0.4.0)
+Millenium Falcon (0.4.0)
+MiniSim (0.4.0)
+Riftmax_Theater_0.320Beta2 (0.4.0)
+Room_Scene (0.4.0)
+TheChairWin (12 August) (0.4.0)
+VanguardValkyrie_WIN (0.4.0)
+VRTypingTrainer1.4b (0.4.0)
+Whirligig (32-bit) (0.4.0)
+DerGrosseGottlieb_Version1_WIN_DK2 (0.4.0)
+Dreadhalls_1.3beta (0.4.1 (2))
+Lava Inc (0.4.0)
+Ocean Rift (0.4.0)
+ovr_unity_0.4.1_demo_win (0.4.1 (1))
+RiftMax 0.321, 0.322 (0.4.1 (2))
+SightLineChairWin (14 August) (0.4.1 (2))
+TitansOfSpaceV1.52-DK2-Windows (0.4.1 (2))
+TuscanyUnity0.4.1 (0.4.1 (2))
+vrchat_w_0_5_15_a (0.4.0)
+CrashedLadner-dk2c-windows (0.4.2)
+DarknetDK2BetaFull04 (0.4.1 (2))
+ovr_unity_0.4.2_demo_win (0.4.2)
+SightLineChairWin (12 September) (0.4.2)
+Windlands(Win32-V030a-SDK042-DK2) (0.4.2)
