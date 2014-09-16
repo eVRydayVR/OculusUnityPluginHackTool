@@ -20,7 +20,27 @@
     <patch name="FadeoutInverseDouble" offset="306288" length="8"/>
     <patch name="FadeoutJump" offset="47903" length="1"/>
   </dll>
-  <dll version="0.4.1" filename="0.4.1/OculusPlugin.dll">
+  <dll version="0.4.1 (1)" filename="0.4.1 (1)/OculusPlugin.dll">
+    <patch name="CA1_0" offset="304216" length="4"/>
+    <patch name="CA1_1" offset="304212" length="4"/>
+    <patch name="CA1_2" offset="303804" length="4"/>
+    <patch name="CA1_3" offset="304288" length="4"/>
+    <patch name="Distortion0" offset="304256" length="4"/>
+    <patch name="Distortion1" offset="304252" length="4"/>
+    <patch name="Distortion2" offset="304248" length="4"/>
+    <patch name="Distortion3" offset="304244" length="4"/>
+    <patch name="Distortion4" offset="304240" length="4"/>
+    <patch name="Distortion5" offset="304236" length="4"/>
+    <patch name="Distortion6" offset="304232" length="4"/>
+    <patch name="Distortion7" offset="304228" length="4"/>
+    <patch name="Distortion8" offset="304312" length="4"/>
+    <patch name="Distortion9" offset="304224" length="4"/>
+    <patch name="Distortion10" offset="304220" length="4"/>
+    <patch name="FadeoutInverse" offset="303736" length="8"/>
+    <patch name="FadeoutInverseDouble" offset="303728" length="8"/>
+    <patch name="FadeoutJump" offset="46575" length="1"/>
+  </dll>
+  <dll version="0.4.1 (2)" filename="0.4.1 (2)/OculusPlugin.dll">
     <patch name="CA1_0" offset="304216" length="4"/>
     <patch name="CA1_1" offset="304212" length="4"/>
     <patch name="CA1_2" offset="303804" length="4"/>
